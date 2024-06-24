@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">ClimatScope</string>
+    <string name="createcity_title">New City name ?</string>
+    <string name="createcity_positive">Create city</string>
+    <string name="createcity_negative">Cancel</string>
+    <string name="createcity_cityhint">New York,London.....</string>
+    <string name="menu_create_city">Create City</string>
+    <string name="delete_city_dialog_title">Do you want to delete %1$s?</string>
+    <string name="delete_city_positive">Delete City</string>
+    <string name="delete_city_nagative">Cancel</string>
+    <string name="could_not_create_city">Could not create city</string>
+    <string name="could_not_delete_city">Could not delete %1$s</string>
+    <string name="city_message_delete_info">%1$s has been deleted</string>
+</resources>
