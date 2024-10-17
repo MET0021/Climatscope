@@ -11,4 +11,7 @@
     <string name="could_not_create_city">Could not create city</string>
     <string name="could_not_delete_city">Could not delete %1$s</string>
     <string name="city_message_delete_info">%1$s has been deleted</string>
+    <string name="weather_temperature_value">%1$d °C</string>
+    <string name="weather_humidity_value">%1$d %%</string>
+    <string name="weather_pressure_value">%1$d hPa</string>
 </resources>
