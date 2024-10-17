@@ -10,6 +10,6 @@ fun mapOpenWeatherDataToWeather(weatherWrapper: WeatherWrapper) : Weather {
         temperature = weatherWrapper.main.temperature,
         humidity = weatherWrapper.main.humidity,
         pressure = weatherWrapper.main.pressure,
-        iconUrl = "https://openweathermap.org/img/w/${weatherFirst.icon}.png"
+        iconUrl = "https://openweathermap.org/img/wn/${weatherFirst.icon}.png"
     )
 }
