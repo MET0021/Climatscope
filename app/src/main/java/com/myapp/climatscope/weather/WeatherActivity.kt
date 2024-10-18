@@ -1,8 +1,6 @@
-package com.example.climatscope.weather
+package com.myapp.climatscope.weather
 
 import android.os.Bundle
-import android.os.PersistableBundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 
 class WeatherActivity : AppCompatActivity () {

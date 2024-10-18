@@ -1,6 +1,6 @@
-package com.example.climatscope.openweathermap
+package com.myapp.climatscope.openweathermap
 
-import com.example.climatscope.weather.Weather
+import com.myapp.climatscope.weather.Weather
 
 fun mapOpenWeatherDataToWeather(weatherWrapper: WeatherWrapper) : Weather {
 

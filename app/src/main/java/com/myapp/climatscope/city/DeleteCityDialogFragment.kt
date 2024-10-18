@@ -1,4 +1,4 @@
-package com.example.climatscope.city
+package com.myapp.climatscope.city
 
 import android.app.AlertDialog
 import android.app.Dialog

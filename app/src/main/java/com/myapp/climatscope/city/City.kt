@@ -1,4 +1,4 @@
-package com.example.climatscope.city
+package com.myapp.climatscope.city
 
 class City(
     var id : Long,

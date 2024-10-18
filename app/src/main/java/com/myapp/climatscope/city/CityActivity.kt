@@ -1,12 +1,12 @@
-package com.example.climatscope.city
+package com.myapp.climatscope.city
 
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.example.climatscope.R
-import com.example.climatscope.weather.WeatherActivity
-import com.example.climatscope.weather.WeatherFragment
+import com.myapp.climatscope.weather.WeatherActivity
+import com.myapp.climatscope.weather.WeatherFragment
 
 class CityActivity : AppCompatActivity(), CityFragment.CityFragmentListener {
 

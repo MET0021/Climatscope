@@ -1,4 +1,4 @@
-package com.example.climatscope.city
+package com.myapp.climatscope.city
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,14 +7,13 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.climatscope.App
-import com.example.climatscope.DataBase
 import com.example.climatscope.R
-import com.example.climatscope.utils.toast
+import com.myapp.climatscope.App
+import com.myapp.climatscope.DataBase
+import com.myapp.climatscope.utils.toast
 
 class CityFragment : Fragment(), CityAdapter.CityItemListener {
 

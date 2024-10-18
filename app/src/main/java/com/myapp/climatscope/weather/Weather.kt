@@ -1,4 +1,4 @@
-package com.example.climatscope.weather
+package com.myapp.climatscope.weather
 
 data class Weather (
     val description: String,

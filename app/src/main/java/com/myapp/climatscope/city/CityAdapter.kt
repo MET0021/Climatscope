@@ -1,4 +1,4 @@
-package com.example.climatscope.city
+package com.myapp.climatscope.city
 
 import android.view.LayoutInflater
 import android.view.View

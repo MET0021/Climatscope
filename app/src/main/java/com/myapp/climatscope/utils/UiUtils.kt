@@ -1,4 +1,4 @@
-package com.example.climatscope.utils
+package com.myapp.climatscope.utils
 
 import android.content.Context
 import android.widget.Toast

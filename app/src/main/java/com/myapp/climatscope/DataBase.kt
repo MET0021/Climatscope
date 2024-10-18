@@ -1,11 +1,11 @@
-package com.example.climatscope
+package com.myapp.climatscope
 
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
-import com.example.climatscope.city.City
+import com.myapp.climatscope.city.City
 
 private const val DATABASE_NAME = "climatscope.db"
 private const val DATABASE_VERSION = 1

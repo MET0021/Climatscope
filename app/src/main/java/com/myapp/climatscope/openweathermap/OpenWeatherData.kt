@@ -1,4 +1,4 @@
-package com.example.climatscope.openweathermap
+package com.myapp.climatscope.openweathermap
 
 import com.google.gson.annotations.SerializedName
 

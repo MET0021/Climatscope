@@ -1,7 +1,7 @@
-package com.example.climatscope
+package com.myapp.climatscope
 
 import android.app.Application
-import com.example.climatscope.openweathermap.OpenWeatherService
+import com.myapp.climatscope.openweathermap.OpenWeatherService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit

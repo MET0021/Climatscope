@@ -11,7 +11,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.example.climatscope"
+        applicationId "com.myapp.climatscope"
         minSdk 28
         targetSdk 34
         versionCode 1

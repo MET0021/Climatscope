@@ -1,6 +1,5 @@
-package com.example.climatscope.weather
+package com.myapp.climatscope.weather
 
-import android.health.connect.datatypes.units.Pressure
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,10 +11,10 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import coil.load
-import com.example.climatscope.App
 import com.example.climatscope.R
-import com.example.climatscope.openweathermap.WeatherWrapper
-import com.example.climatscope.openweathermap.mapOpenWeatherDataToWeather
+import com.myapp.climatscope.App
+import com.myapp.climatscope.openweathermap.WeatherWrapper
+import com.myapp.climatscope.openweathermap.mapOpenWeatherDataToWeather
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

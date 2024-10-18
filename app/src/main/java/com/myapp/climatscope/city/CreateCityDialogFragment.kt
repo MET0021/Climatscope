@@ -1,9 +1,8 @@
-package com.example.climatscope.city
+package com.myapp.climatscope.city
 
 
 import android.app.AlertDialog
 import android.app.Dialog
-import android.content.DialogInterface
 import android.os.Bundle
 import android.text.InputType
 import android.widget.EditText
