@@ -20,6 +20,7 @@ class CityFragment : Fragment(), CityAdapter.CityItemListener {
 
     interface CityFragmentListener {
         fun onCitySelected(city: City)
+        fun onEmptyCities()
     }
 
     lateinit var listener: CityFragmentListener
@@ -73,6 +74,13 @@ class CityFragment : Fragment(), CityAdapter.CityItemListener {
         listener.onCitySelected(city)
     }
 
+    fun selectFirstCity() {
+        when (cities.isEmpty()) {
+            true -> listener.onEmptyCities()
+            false -> listener.onCitySelected(cities.first())
+        }
+    }
+
     override fun onCityDeleted(city: City) {
         showDeleteCityDialog(city)
     }
@@ -120,6 +128,7 @@ class CityFragment : Fragment(), CityAdapter.CityItemListener {
         if (database.deleteCity(city)) {
             cities.remove(city)
             adapter.notifyDataSetChanged()
+            selectFirstCity()
             context?.toast(getString(R.string.city_message_delete_info, city.name))
         } else {
             context?.toast(getString(R.string.could_not_delete_city, city.name))

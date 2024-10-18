@@ -65,7 +65,7 @@ class WeatherFragment : Fragment() {
         }
     }
 
-    private fun updateWeatherForCity(cityName: String) {
+    fun updateWeatherForCity(cityName: String) {
         this.cityName = cityName
         val call= App.weatherService.getWeather("$cityName,fr")
 
@@ -111,5 +111,16 @@ class WeatherFragment : Fragment() {
 
     private fun refreshWeather() {
         updateWeatherForCity(cityName)
+    }
+
+    fun clearUi() {
+        weatherIcon.setImageResource(R.mipmap.ic_launcher)
+        cityName = ""
+        city.text = ""
+        weatherDescription.text = ""
+        temperature.text = ""
+        humidity.text = ""
+        pressure.text = ""
+
     }
 }
