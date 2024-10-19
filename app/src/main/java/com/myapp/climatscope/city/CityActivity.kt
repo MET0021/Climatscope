@@ -4,7 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import com.example.climatscope.R
+import com.myapp.climatscope.R
 import com.myapp.climatscope.weather.WeatherActivity
 import com.myapp.climatscope.weather.WeatherFragment
 

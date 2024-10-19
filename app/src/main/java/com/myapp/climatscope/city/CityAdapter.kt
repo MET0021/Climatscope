@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.climatscope.R
+import com.myapp.climatscope.R
 
 class CityAdapter(
     private val cities: List<City>,

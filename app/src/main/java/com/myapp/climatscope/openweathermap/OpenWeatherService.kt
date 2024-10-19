@@ -1,6 +1,6 @@
 package com.myapp.climatscope.openweathermap
 
-import com.example.climatscope.BuildConfig
+import com.myapp.climatscope.BuildConfig
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query

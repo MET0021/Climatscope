@@ -10,9 +10,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.climatscope.R
 import com.myapp.climatscope.App
 import com.myapp.climatscope.DataBase
+import com.myapp.climatscope.R
 import com.myapp.climatscope.utils.toast
 
 class CityFragment : Fragment(), CityAdapter.CityItemListener {

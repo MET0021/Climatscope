@@ -7,7 +7,7 @@ import android.os.Bundle
 import android.text.InputType
 import android.widget.EditText
 import androidx.fragment.app.DialogFragment
-import com.example.climatscope.R
+import com.myapp.climatscope.R
 
 class CreateCityDialogFragment : DialogFragment() {
     interface CreateCityDialogListener {

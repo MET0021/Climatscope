@@ -4,7 +4,7 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
-import com.example.climatscope.R
+import com.myapp.climatscope.R
 
 class DeleteCityDialogFragment : DialogFragment() {
     interface DeleteCityDialogListener {
