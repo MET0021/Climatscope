@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace 'com.myapp.climatscope'
-    compileSdk 34
+    compileSdk 35
     buildFeatures {
         buildConfig = true
     }
@@ -13,9 +13,9 @@ android {
     defaultConfig {
         applicationId "com.myapp.climatscope"
         minSdk 28
-        targetSdk 34
-        versionCode 3
-        versionName "1.2"
+        targetSdk 35
+        versionCode 6
+        versionName "1.6"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         Properties properties = new Properties()
@@ -31,11 +31,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '17'
     }
 }
 
