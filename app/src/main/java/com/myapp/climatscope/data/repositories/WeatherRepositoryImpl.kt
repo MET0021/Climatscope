@@ -11,4 +11,8 @@ class WeatherRepositoryImpl(
     override suspend fun getWeatherForCity(cityName: String): Result<Weather> {
         return remoteDataSource.getWeatherForCity(cityName)
     }
+
+    override suspend fun getWeatherByCoordinates(latitude: Double, longitude: Double): Result<Weather> {
+        return remoteDataSource.getWeatherByCoordinates(latitude, longitude)
+    }
 }

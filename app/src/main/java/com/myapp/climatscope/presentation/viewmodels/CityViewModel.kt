@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 
 data class CityUiState(
     val cities: List<City> = emptyList(),
+    val currentCity: City? = null,
     val isLoading: Boolean = false,
     val errorMessage: String? = null
 )
@@ -93,6 +94,14 @@ class CityViewModel(
                 )
             }
         }
+    }
+
+    fun setCurrentCity(city: City) {
+        _uiState.value = _uiState.value.copy(currentCity = city)
+    }
+
+    fun removeCity(city: City) {
+        deleteCity(city)
     }
 
     fun clearError() {

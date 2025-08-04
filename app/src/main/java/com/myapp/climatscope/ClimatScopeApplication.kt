@@ -3,7 +3,7 @@ package com.myapp.climatscope
 import android.app.Application
 import com.myapp.climatscope.di.DependencyContainer
 
-class App : Application() {
+class ClimatScopeApplication : Application() {
 
     lateinit var dependencyContainer: DependencyContainer
         private set

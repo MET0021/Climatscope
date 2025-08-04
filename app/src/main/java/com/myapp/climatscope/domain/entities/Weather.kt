@@ -5,5 +5,7 @@ data class Weather(
     val temperature: Double,
     val humidity: Int,
     val pressure: Int,
-    val iconUrl: String
+    val iconUrl: String,
+    val windSpeed: Double = 0.0,
+    val feelsLike: Double = temperature
 )

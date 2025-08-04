@@ -11,30 +11,49 @@ import androidx.compose.material3.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
+// Couleurs modernes et vibrants
 private val LightColorScheme = lightColorScheme(
-    primary = Color(0xFF2196F3),
+    primary = Color(0xFF6366F1), // Indigo moderne
     onPrimary = Color.White,
-    primaryContainer = Color(0xFFBBDEFB),
-    onPrimaryContainer = Color(0xFF0D47A1),
-    secondary = Color(0xFF03DAC6),
-    onSecondary = Color.Black,
-    surface = Color(0xFFFFFBFE),
-    onSurface = Color(0xFF1C1B1F),
+    primaryContainer = Color(0xFFE0E7FF),
+    onPrimaryContainer = Color(0xFF312E81),
+    secondary = Color(0xFF10B981), // Emerald
+    onSecondary = Color.White,
+    secondaryContainer = Color(0xFFD1FAE5),
+    onSecondaryContainer = Color(0xFF064E3B),
+    tertiary = Color(0xFFF59E0B), // Amber
+    onTertiary = Color.White,
+    surface = Color(0xFFFAFAFA),
+    onSurface = Color(0xFF1F2937),
+    surfaceVariant = Color(0xFFF3F4F6),
+    onSurfaceVariant = Color(0xFF6B7280),
     background = Color(0xFFFFFBFE),
-    onBackground = Color(0xFF1C1B1F),
+    onBackground = Color(0xFF1F2937),
+    error = Color(0xFFEF4444),
+    onError = Color.White,
+    outline = Color(0xFFD1D5DB)
 )
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Color(0xFF90CAF9),
-    onPrimary = Color(0xFF003258),
-    primaryContainer = Color(0xFF004881),
-    onPrimaryContainer = Color(0xFFBBDEFB),
-    secondary = Color(0xFF80CBC4),
-    onSecondary = Color(0xFF003A36),
-    surface = Color(0xFF1C1B1F),
-    onSurface = Color(0xFFE6E1E5),
-    background = Color(0xFF1C1B1F),
-    onBackground = Color(0xFFE6E1E5),
+    primary = Color(0xFF818CF8), // Indigo clair
+    onPrimary = Color(0xFF1E1B4B),
+    primaryContainer = Color(0xFF3730A3),
+    onPrimaryContainer = Color(0xFFE0E7FF),
+    secondary = Color(0xFF34D399), // Emerald clair
+    onSecondary = Color(0xFF022C22),
+    secondaryContainer = Color(0xFF047857),
+    onSecondaryContainer = Color(0xFFD1FAE5),
+    tertiary = Color(0xFFFBBF24), // Amber clair
+    onTertiary = Color(0xFF92400E),
+    surface = Color(0xFF111827),
+    onSurface = Color(0xFFE5E7EB),
+    surfaceVariant = Color(0xFF1F2937),
+    onSurfaceVariant = Color(0xFF9CA3AF),
+    background = Color(0xFF0F172A),
+    onBackground = Color(0xFFE5E7EB),
+    error = Color(0xFFF87171),
+    onError = Color(0xFF7F1D1D),
+    outline = Color(0xFF374151)
 )
 
 @Composable

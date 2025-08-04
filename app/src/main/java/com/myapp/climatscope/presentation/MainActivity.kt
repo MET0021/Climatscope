@@ -8,7 +8,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
-import com.myapp.climatscope.App
+import com.myapp.climatscope.ClimatScopeApplication
 import com.myapp.climatscope.presentation.navigation.ClimatScopeNavigation
 import com.myapp.climatscope.presentation.theme.ClimatScopeTheme
 
@@ -16,7 +16,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val app = application as App
+        val app = application as ClimatScopeApplication
 
         setContent {
             ClimatScopeTheme {

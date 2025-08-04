@@ -1,0 +1,429 @@
+package com.myapp.climatscope.presentation.components
+
+import androidx.compose.animation.*
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
+import com.myapp.climatscope.domain.entities.City
+import com.myapp.climatscope.domain.entities.Weather
+import com.myapp.climatscope.presentation.theme.ClimatScopeTheme
+
+@Composable
+fun WeatherAdviceCard(
+    weather: Weather,
+    modifier: Modifier = Modifier
+) {
+    val advice = getWeatherAdvice(weather)
+    val adviceColor = getAdviceColor(weather)
+
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = adviceColor.copy(alpha = 0.1f)
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(48.dp)
+                    .clip(CircleShape)
+                    .background(adviceColor.copy(alpha = 0.2f)),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = getAdviceIcon(weather),
+                    contentDescription = null,
+                    tint = adviceColor,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = "Conseil météo",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontWeight = FontWeight.Medium
+                )
+                Text(
+                    text = advice,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    fontWeight = FontWeight.Medium
+                )
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun EnhancedCityBottomSheet(
+    cities: List<City>,
+    isLoading: Boolean,
+    onCitySelected: (City) -> Unit,
+    onAddCity: (String) -> Unit,
+    onDeleteCity: (City) -> Unit,
+    onDismiss: () -> Unit
+) {
+    var showAddDialog by remember { mutableStateOf(false) }
+
+    Dialog(
+        onDismissRequest = onDismiss,
+        properties = DialogProperties(usePlatformDefaultWidth = false)
+    ) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(0.8f),
+            shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surface
+            )
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(24.dp)
+            ) {
+                // En-tête
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "Mes villes",
+                        style = MaterialTheme.typography.headlineSmall,
+                        fontWeight = FontWeight.Bold
+                    )
+
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        FilledIconButton(
+                            onClick = { showAddDialog = true },
+                            colors = IconButtonDefaults.filledIconButtonColors(
+                                containerColor = MaterialTheme.colorScheme.primary
+                            )
+                        ) {
+                            Icon(Icons.Default.Add, contentDescription = "Ajouter")
+                        }
+
+                        IconButton(onClick = onDismiss) {
+                            Icon(Icons.Default.Close, contentDescription = "Fermer")
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Contenu
+                when {
+                    isLoading -> {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator()
+                        }
+                    }
+                    cities.isEmpty() -> {
+                        EmptyStateCard(
+                            onAddCityClick = { showAddDialog = true }
+                        )
+                    }
+                    else -> {
+                        LazyColumn(
+                            verticalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            items(
+                                items = cities,
+                                key = { it.id }
+                            ) { city ->
+                                EnhancedCityItem(
+                                    city = city,
+                                    onClick = { onCitySelected(city) },
+                                    onDelete = { onDeleteCity(city) }
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    if (showAddDialog) {
+        AddCityDialog(
+            onAddCity = { cityName ->
+                onAddCity(cityName)
+                showAddDialog = false
+            },
+            onDismiss = { showAddDialog = false }
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun EnhancedCityItem(
+    city: City,
+    onClick: () -> Unit,
+    onDelete: () -> Unit
+) {
+    Card(
+        onClick = onClick,
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceContainer
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(48.dp)
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = city.name.first().uppercase(),
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+
+                Column {
+                    Text(
+                        text = city.name,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Medium
+                    )
+                    Text(
+                        text = "Appuyez pour voir la météo",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+
+            IconButton(
+                onClick = onDelete,
+                colors = IconButtonDefaults.iconButtonColors(
+                    contentColor = MaterialTheme.colorScheme.error
+                )
+            ) {
+                Icon(
+                    Icons.Default.Delete,
+                    contentDescription = "Supprimer",
+                    modifier = Modifier.size(20.dp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun EmptyStateCard(
+    onAddCityClick: () -> Unit
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+        )
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(32.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Default.LocationOn,
+                contentDescription = null,
+                modifier = Modifier.size(64.dp),
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+
+            Text(
+                text = "Aucune ville ajoutée",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center
+            )
+
+            Text(
+                text = "Commencez par ajouter votre première ville pour suivre la météo",
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center
+            )
+
+            Button(
+                onClick = onAddCityClick,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Icon(Icons.Default.Add, contentDescription = null)
+                Spacer(modifier = Modifier.width(8.dp))
+                Text("Ajouter une ville")
+            }
+        }
+    }
+}
+
+@Composable
+private fun AddCityDialog(
+    onAddCity: (String) -> Unit,
+    onDismiss: () -> Unit
+) {
+    var cityName by remember { mutableStateOf("") }
+    var isError by remember { mutableStateOf(false) }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Text(
+                text = "Ajouter une ville",
+                style = MaterialTheme.typography.headlineSmall,
+                fontWeight = FontWeight.Bold
+            )
+        },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(
+                    text = "Entrez le nom de la ville que vous souhaitez ajouter",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+
+                OutlinedTextField(
+                    value = cityName,
+                    onValueChange = {
+                        cityName = it
+                        isError = false
+                    },
+                    label = { Text("Nom de la ville") },
+                    placeholder = { Text("ex: Paris, Londres...") },
+                    singleLine = true,
+                    isError = isError,
+                    supportingText = if (isError) {
+                        { Text("Veuillez entrer un nom de ville valide") }
+                    } else null,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+        },
+        confirmButton = {
+            Button(
+                onClick = {
+                    if (cityName.isBlank()) {
+                        isError = true
+                    } else {
+                        onAddCity(cityName.trim())
+                    }
+                },
+                enabled = cityName.isNotBlank()
+            ) {
+                Text("Ajouter")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Annuler")
+            }
+        }
+    )
+}
+
+// Fonctions utilitaires pour les conseils météo
+private fun getWeatherAdvice(weather: Weather): String {
+    return when {
+        weather.temperature < 0 -> "Il fait très froid ! Couvrez-vous bien."
+        weather.temperature < 10 -> "Température fraîche, pensez à prendre une veste."
+        weather.temperature > 30 -> "Il fait chaud ! Restez hydraté et cherchez l'ombre."
+        weather.humidity > 80 -> "Forte humidité, l'air peut sembler lourd."
+        weather.windSpeed > 20 -> "Vent fort, attention aux objets qui peuvent voler."
+        else -> "Conditions météo agréables !"
+    }
+}
+
+private fun getAdviceColor(weather: Weather) = when {
+    weather.temperature < 0 -> Color(0xFF4FC3F7) // Bleu clair pour le froid
+    weather.temperature < 10 -> Color(0xFF81C784) // Vert pour frais
+    weather.temperature > 30 -> Color(0xFFFF8A65) // Orange pour chaud
+    weather.humidity > 80 -> Color(0xFF64B5F6) // Bleu pour humidité
+    weather.windSpeed > 20 -> Color(0xFFAED581) // Vert clair pour vent
+    else -> Color(0xFF4CAF50) // Vert pour normal
+}
+
+private fun getAdviceIcon(weather: Weather) = when {
+    weather.temperature < 0 -> Icons.Default.AcUnit
+    weather.temperature < 10 -> Icons.Default.DeviceThermostat
+    weather.temperature > 30 -> Icons.Default.WbSunny
+    weather.humidity > 80 -> Icons.Default.Opacity
+    weather.windSpeed > 20 -> Icons.Default.Air
+    else -> Icons.Default.CheckCircle
+}
+
+@Preview(showBackground = true)
+@Composable
+fun WeatherAdviceCardPreview() {
+    ClimatScopeTheme {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            WeatherAdviceCard(
+                weather = Weather(
+                    temperature = 35.0,
+                    description = "Ensoleillé",
+                    humidity = 45,
+                    pressure = 1013,
+                    windSpeed = 10.0,
+                    feelsLike = 38.0,
+                    iconUrl = ""
+                )
+            )
+        }
+    }
+}

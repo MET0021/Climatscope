@@ -1,5 +1,6 @@
 package com.myapp.climatscope.presentation.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -36,6 +37,7 @@ class WeatherViewModel(
 
             try {
                 val result = getWeatherUseCase(cityName)
+                Log.e("TAG", "TEST loadWeatherForCity: $result", )
                 result.fold(
                     onSuccess = { weather ->
                         _uiState.value = _uiState.value.copy(
@@ -57,6 +59,16 @@ class WeatherViewModel(
                 )
             }
         }
+    }
+
+    // Méthode pour setter directement les données météo de géolocalisation
+    fun setLocationWeather(weather: Weather, locationDescription: String) {
+        _uiState.value = _uiState.value.copy(
+            weather = weather,
+            cityName = locationDescription,
+            isLoading = false,
+            errorMessage = null
+        )
     }
 
     fun refreshWeather() {

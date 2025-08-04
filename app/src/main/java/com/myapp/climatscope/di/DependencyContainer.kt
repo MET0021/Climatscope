@@ -2,16 +2,15 @@ package com.myapp.climatscope.di
 
 import android.content.Context
 import com.myapp.climatscope.data.local.CityLocalDataSource
+import com.myapp.climatscope.data.location.DefaultLocationService
+import com.myapp.climatscope.data.location.LocationService
 import com.myapp.climatscope.data.remote.WeatherApiService
 import com.myapp.climatscope.data.remote.WeatherRemoteDataSource
 import com.myapp.climatscope.data.repositories.CityRepositoryImpl
 import com.myapp.climatscope.data.repositories.WeatherRepositoryImpl
 import com.myapp.climatscope.domain.repositories.CityRepository
 import com.myapp.climatscope.domain.repositories.WeatherRepository
-import com.myapp.climatscope.domain.usecases.CreateCityUseCase
-import com.myapp.climatscope.domain.usecases.DeleteCityUseCase
-import com.myapp.climatscope.domain.usecases.GetAllCitiesUseCase
-import com.myapp.climatscope.domain.usecases.GetWeatherUseCase
+import com.myapp.climatscope.domain.usecases.*
 import com.myapp.climatscope.presentation.viewmodels.CityViewModelFactory
 import com.myapp.climatscope.presentation.viewmodels.WeatherViewModelFactory
 import okhttp3.OkHttpClient
@@ -32,10 +31,11 @@ class DependencyContainer(private val context: Context) {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
-    // Data Sources
+    // Services
     private val weatherApiService: WeatherApiService = retrofit.create(WeatherApiService::class.java)
     private val weatherRemoteDataSource = WeatherRemoteDataSource(weatherApiService)
     private val cityLocalDataSource = CityLocalDataSource(context)
+    val locationService: LocationService = DefaultLocationService(context)
 
     // Repositories
     private val cityRepository: CityRepository = CityRepositoryImpl(cityLocalDataSource)
@@ -46,13 +46,12 @@ class DependencyContainer(private val context: Context) {
     private val createCityUseCase = CreateCityUseCase(cityRepository)
     private val deleteCityUseCase = DeleteCityUseCase(cityRepository)
     private val getWeatherUseCase = GetWeatherUseCase(weatherRepository)
+    private val getWeatherByLocationUseCase = DefaultGetWeatherByLocationUseCase(locationService, weatherRepository)
 
     // ViewModels Factories
-    val cityViewModelFactory = CityViewModelFactory(
-        getAllCitiesUseCase,
-        createCityUseCase,
-        deleteCityUseCase
-    )
-
+    val cityViewModelFactory = CityViewModelFactory(getAllCitiesUseCase, createCityUseCase, deleteCityUseCase)
     val weatherViewModelFactory = WeatherViewModelFactory(getWeatherUseCase)
+
+    // Public access to use cases
+    fun getWeatherByLocationUseCase(): GetWeatherByLocationUseCase = getWeatherByLocationUseCase
 }

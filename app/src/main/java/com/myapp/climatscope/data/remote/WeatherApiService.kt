@@ -11,4 +11,11 @@ interface WeatherApiService {
         @Query("q") cityName: String,
         @Query("appid") apiKey: String = BuildConfig.API_KEY,
     ): Response<WeatherResponse>
+
+    @GET("data/2.5/weather?units=metric&lang=fr")
+    suspend fun getWeatherByCoordinates(
+        @Query("lat") latitude: Double,
+        @Query("lon") longitude: Double,
+        @Query("appid") apiKey: String = BuildConfig.API_KEY,
+    ): Response<WeatherResponse>
 }
