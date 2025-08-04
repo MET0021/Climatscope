@@ -27,9 +27,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.myapp.climatscope.domain.entities.City
 import com.myapp.climatscope.domain.entities.Weather
 import com.myapp.climatscope.presentation.theme.ClimatScopeTheme
-import com.myapp.climatscope.data.remote.dto.CitySearchResponse
+import com.myapp.climatscope.data.remote.GeocodingResponse
 import com.myapp.climatscope.presentation.viewmodels.CitySearchViewModel
-import com.myapp.climatscope.presentation.viewmodels.CitySearchViewModelFactory
 import com.myapp.climatscope.ClimatScopeApplication
 
 @Composable
@@ -389,7 +388,7 @@ private fun AddCityDialog(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SmartCitySearchDialog(
-    onCitySelected: (CitySearchResponse) -> Unit,
+    onCitySelected: (GeocodingResponse) -> Unit,
     onDismiss: () -> Unit
 ) {
     val context = LocalContext.current

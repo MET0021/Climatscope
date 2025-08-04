@@ -7,8 +7,6 @@ import com.myapp.climatscope.data.location.DefaultLocationService
 import com.myapp.climatscope.data.location.LocationService
 import com.myapp.climatscope.data.remote.WeatherApiService
 import com.myapp.climatscope.data.remote.WeatherRemoteDataSource
-import com.myapp.climatscope.data.remote.CitySearchApi
-import com.myapp.climatscope.data.remote.DefaultCitySearchRemoteDataSource
 import com.myapp.climatscope.data.repositories.CityRepositoryImpl
 import com.myapp.climatscope.data.repositories.WeatherRepositoryImpl
 import com.myapp.climatscope.domain.repositories.CityRepository
@@ -32,15 +30,8 @@ class DependencyContainer(private val context: Context) {
         .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
         .build()
 
-    // Retrofit pour l'API météo principale
+    // Retrofit pour l'API météo (OpenWeatherMap unifié)
     private val retrofit = Retrofit.Builder()
-        .client(httpClient)
-        .baseUrl("https://api.openweathermap.org/")
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-
-    // Retrofit séparé pour l'API de géocodage (recherche de villes)
-    private val geocodingRetrofit = Retrofit.Builder()
         .client(httpClient)
         .baseUrl("https://api.openweathermap.org/")
         .addConverterFactory(GsonConverterFactory.create())
@@ -48,10 +39,9 @@ class DependencyContainer(private val context: Context) {
 
     // Services
     private val weatherApiService: WeatherApiService = retrofit.create(WeatherApiService::class.java)
-    private val citySearchApi: CitySearchApi = geocodingRetrofit.create(CitySearchApi::class.java)
 
+    // Data Sources
     private val weatherRemoteDataSource = WeatherRemoteDataSource(weatherApiService)
-    private val citySearchRemoteDataSource = DefaultCitySearchRemoteDataSource(citySearchApi, apiKey)
     private val cityLocalDataSource = CityLocalDataSource(context)
     val locationService: LocationService = DefaultLocationService(context)
 
@@ -59,13 +49,14 @@ class DependencyContainer(private val context: Context) {
     private val cityRepository: CityRepository = CityRepositoryImpl(cityLocalDataSource)
     private val weatherRepository: WeatherRepository = WeatherRepositoryImpl(weatherRemoteDataSource)
 
-    // Use Cases
+    // Use Cases - Mis à jour avec les nouvelles fonctionnalités
     private val getAllCitiesUseCase = GetAllCitiesUseCase(cityRepository)
     private val createCityUseCase = CreateCityUseCase(cityRepository)
     private val deleteCityUseCase = DeleteCityUseCase(cityRepository)
     private val getWeatherUseCase = GetWeatherUseCase(weatherRepository)
     private val getWeatherByLocationUseCase = DefaultGetWeatherByLocationUseCase(locationService, weatherRepository)
-    private val searchCitiesUseCase = DefaultSearchCitiesUseCase(citySearchRemoteDataSource)
+    private val searchCitiesUseCase = SearchCitiesUseCase(weatherRepository)
+    private val getCityNameByLocationUseCase = GetCityNameByLocationUseCase(weatherRepository)
 
     // ViewModels Factories
     fun getCityViewModelFactory(): CityViewModelFactory {
@@ -82,5 +73,13 @@ class DependencyContainer(private val context: Context) {
 
     fun getWeatherByLocationUseCase(): DefaultGetWeatherByLocationUseCase {
         return getWeatherByLocationUseCase
+    }
+
+    fun getSearchCitiesUseCase(): SearchCitiesUseCase {
+        return searchCitiesUseCase
+    }
+
+    fun getCityNameByLocationUseCase(): GetCityNameByLocationUseCase {
+        return getCityNameByLocationUseCase
     }
 }

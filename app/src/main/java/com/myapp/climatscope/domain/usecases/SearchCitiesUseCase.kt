@@ -1,20 +1,20 @@
 package com.myapp.climatscope.domain.usecases
 
-import android.util.Log
-import com.myapp.climatscope.data.remote.CitySearchRemoteDataSource
-import com.myapp.climatscope.data.remote.dto.CitySearchResponse
+import com.myapp.climatscope.data.remote.GeocodingResponse
+import com.myapp.climatscope.domain.repositories.WeatherRepository
 
-interface SearchCitiesUseCase {
-    suspend operator fun invoke(query: String): Result<List<CitySearchResponse>>
-}
+class SearchCitiesUseCase(
+    private val weatherRepository: WeatherRepository
+) {
+    suspend operator fun invoke(query: String): Result<List<GeocodingResponse>> {
+        if (query.isBlank()) {
+            return Result.success(emptyList())
+        }
 
-class DefaultSearchCitiesUseCase(
-    private val citySearchRemoteDataSource: CitySearchRemoteDataSource
-) : SearchCitiesUseCase {
+        if (query.length < 2) {
+            return Result.success(emptyList())
+        }
 
-    override suspend fun invoke(query: String): Result<List<CitySearchResponse>> {
-        val result =  citySearchRemoteDataSource.searchCities(query)
-        Log.i("TAG", "TEST invoke: $result")
-        return result
+        return weatherRepository.searchCities(query)
     }
 }

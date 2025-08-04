@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.myapp.climatscope.data.remote.dto.CitySearchResponse
+import com.myapp.climatscope.data.remote.GeocodingResponse
 import com.myapp.climatscope.domain.usecases.SearchCitiesUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,7 +19,7 @@ class CitySearchViewModel(
     val searchState: StateFlow<SearchState> = _searchState.asStateFlow()
 
     data class SearchState(
-        val cities: List<CitySearchResponse> = emptyList(),
+        val cities: List<GeocodingResponse> = emptyList(),
         val isLoading: Boolean = false,
         val error: String? = null
     )
@@ -38,7 +38,6 @@ class CitySearchViewModel(
 
             try {
                 val result = searchCitiesUseCase(query)
-                Log.i("TAG", "TEST searchCities ****** $result")
                 result.fold(
                     onSuccess = { cities ->
                         _searchState.value = _searchState.value.copy(
