@@ -54,14 +54,15 @@ fun HomeScreen(
         val coarseLocationGranted = permissions[Manifest.permission.ACCESS_COARSE_LOCATION] ?: false
 
         if (fineLocationGranted || coarseLocationGranted) {
+            // Permission accordée : récupérer la géolocalisation
             scope.launch {
                 try {
                     val result = app.dependencyContainer.getWeatherByLocationUseCase().invoke()
                     result.fold(
-                        onSuccess = { (weather, _) ->
+                        onSuccess = { (weather, _, cityName) ->
                             weatherViewModel.setLocationWeather(
                                 weather,
-                                "Ma position"
+                                cityName
                             )
                         },
                         onFailure = { error ->
@@ -74,6 +75,9 @@ fun HomeScreen(
                     weatherViewModel.loadWeatherForCity("Paris")
                 }
             }
+        } else {
+            // Permission refusée : charger Paris par défaut
+            weatherViewModel.loadWeatherForCity("Paris")
         }
     }
 
@@ -81,9 +85,16 @@ fun HomeScreen(
     LaunchedEffect(Unit) {
         cityViewModel.loadCities()
 
-        // Charger une ville par défaut si aucune donnée
+        // Au premier lancement, demander automatiquement la géolocalisation
+        // au lieu de charger Paris directement
         if (weatherUiState.weather == null && !weatherUiState.isLoading) {
-            weatherViewModel.loadWeatherForCity("Paris")
+            // Déclencher automatiquement la demande de géolocalisation
+            locationPermissionLauncher.launch(
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+            )
         }
     }
 
@@ -102,12 +113,37 @@ fun HomeScreen(
         // Top Bar
         TopBar(
             onLocationClick = {
-                locationPermissionLauncher.launch(
-                    arrayOf(
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION
-                    )
-                )
+                scope.launch {
+                    try {
+                        val result = app.dependencyContainer.getWeatherByLocationUseCase().invoke()
+                        result.fold(
+                            onSuccess = { (weather, _, cityName) ->
+                                weatherViewModel.setLocationWeather(
+                                    weather,
+                                    cityName
+                                )
+                            },
+                            onFailure = { error ->
+                                println("Erreur de géolocalisation: ${error.message}")
+                                // En cas d'erreur, demander les permissions de localisation
+                                locationPermissionLauncher.launch(
+                                    arrayOf(
+                                        Manifest.permission.ACCESS_FINE_LOCATION,
+                                        Manifest.permission.ACCESS_COARSE_LOCATION
+                                    )
+                                )
+                            }
+                        )
+                    } catch (e: Exception) {
+                        println("Erreur lors de la récupération de la localisation: ${e.message}")
+                        locationPermissionLauncher.launch(
+                            arrayOf(
+                                Manifest.permission.ACCESS_FINE_LOCATION,
+                                Manifest.permission.ACCESS_COARSE_LOCATION
+                            )
+                        )
+                    }
+                }
             },
             onCitiesClick = { showBottomSheet = true }
         )
@@ -219,7 +255,7 @@ private fun TopBar(
             }
             IconButton(onClick = onCitiesClick) {
                 Icon(
-                    imageVector = Icons.Default.List,
+                    imageVector = Icons.Default.Menu,
                     contentDescription = "Mes villes"
                 )
             }
@@ -284,7 +320,7 @@ private fun ErrorCard(
                 color = MaterialTheme.colorScheme.onErrorContainer
             )
             Text(
-                text = errorMessage ?: "",
+                text = errorMessage ?: "Erreur inconnue",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onErrorContainer,
                 textAlign = TextAlign.Center

@@ -100,10 +100,6 @@ class CityViewModel(
         _uiState.value = _uiState.value.copy(currentCity = city)
     }
 
-    fun removeCity(city: City) {
-        deleteCity(city)
-    }
-
     fun clearError() {
         _uiState.value = _uiState.value.copy(errorMessage = null)
     }

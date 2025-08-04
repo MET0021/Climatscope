@@ -6,7 +6,7 @@ import com.myapp.climatscope.domain.entities.Weather
 import android.location.Location
 
 interface GetWeatherByLocationUseCase {
-    suspend operator fun invoke(): Result<Pair<Weather, Location>>
+    suspend operator fun invoke(): Result<Triple<Weather, Location, String>>
 }
 
 class DefaultGetWeatherByLocationUseCase(
@@ -14,7 +14,7 @@ class DefaultGetWeatherByLocationUseCase(
     private val weatherRepository: WeatherRepository
 ) : GetWeatherByLocationUseCase {
 
-    override suspend fun invoke(): Result<Pair<Weather, Location>> {
+    override suspend fun invoke(): Result<Triple<Weather, Location, String>> {
         return try {
             // Obtenir la position actuelle
             val locationResult = locationService.getCurrentLocation()
@@ -29,7 +29,14 @@ class DefaultGetWeatherByLocationUseCase(
 
                     weatherResult.fold(
                         onSuccess = { weather ->
-                            Result.success(Pair(weather, location))
+                            // Obtenir le nom de la ville à partir du service de géolocalisation
+                            val cityNameResult = locationService.getCityNameFromCoordinates(
+                                latitude = location.latitude,
+                                longitude = location.longitude
+                            )
+
+                            val cityName = cityNameResult.getOrElse { "Ma position" }
+                            Result.success(Triple(weather, location, cityName))
                         },
                         onFailure = { error ->
                             Result.failure(error)
