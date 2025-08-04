@@ -37,7 +37,6 @@ class WeatherViewModel(
 
             try {
                 val result = getWeatherUseCase(cityName)
-                Log.e("TAG", "TEST loadWeatherForCity: $result", )
                 result.fold(
                     onSuccess = { weather ->
                         _uiState.value = _uiState.value.copy(

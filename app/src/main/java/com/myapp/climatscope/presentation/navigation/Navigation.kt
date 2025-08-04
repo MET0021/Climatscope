@@ -48,10 +48,10 @@ fun ClimatScopeNavigation(
         // Écran principal simplifié
         composable(Screen.Home.route) {
             val weatherViewModel: WeatherViewModel = viewModel(
-                factory = app.dependencyContainer.weatherViewModelFactory
+                factory = app.dependencyContainer.getWeatherViewModelFactory()
             )
             val cityViewModel: CityViewModel = viewModel(
-                factory = app.dependencyContainer.cityViewModelFactory
+                factory = app.dependencyContainer.getCityViewModelFactory()
             )
 
             HomeScreen(
@@ -63,10 +63,10 @@ fun ClimatScopeNavigation(
         // Écran de sélection des villes (optionnel)
         composable(Screen.CitySelection.route) {
             val cityViewModel: CityViewModel = viewModel(
-                factory = app.dependencyContainer.cityViewModelFactory
+                factory = app.dependencyContainer.getCityViewModelFactory()
             )
             val weatherViewModel: WeatherViewModel = viewModel(
-                factory = app.dependencyContainer.weatherViewModelFactory
+                factory = app.dependencyContainer.getWeatherViewModelFactory()
             )
 
             CitySelectionScreen(
@@ -87,7 +87,7 @@ fun ClimatScopeNavigation(
         composable(Screen.Weather.route) { backStackEntry ->
             val cityName = backStackEntry.arguments?.getString("cityName") ?: ""
             val weatherViewModel: WeatherViewModel = viewModel(
-                factory = app.dependencyContainer.weatherViewModelFactory
+                factory = app.dependencyContainer.getWeatherViewModelFactory()
             )
 
             WeatherScreen(

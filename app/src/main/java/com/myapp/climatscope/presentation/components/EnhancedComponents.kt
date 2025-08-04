@@ -2,6 +2,7 @@ package com.myapp.climatscope.presentation.components
 
 import androidx.compose.animation.*
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -15,15 +16,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.myapp.climatscope.domain.entities.City
 import com.myapp.climatscope.domain.entities.Weather
 import com.myapp.climatscope.presentation.theme.ClimatScopeTheme
+import com.myapp.climatscope.data.remote.dto.CitySearchResponse
+import com.myapp.climatscope.presentation.viewmodels.CitySearchViewModel
+import com.myapp.climatscope.presentation.viewmodels.CitySearchViewModelFactory
+import com.myapp.climatscope.ClimatScopeApplication
 
 @Composable
 fun WeatherAdviceCard(
@@ -65,7 +72,7 @@ fun WeatherAdviceCard(
 
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = "Conseil météo",
+                    text = "Conseil mét��o",
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontWeight = FontWeight.Medium
@@ -370,63 +377,79 @@ private fun AddCityDialog(
     onAddCity: (String) -> Unit,
     onDismiss: () -> Unit
 ) {
-    var cityName by remember { mutableStateOf("") }
-    var isError by remember { mutableStateOf(false) }
-
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = {
-            Text(
-                text = "Ajouter une ville",
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold
-            )
+    // Interface de recherche unifiée directement
+    SmartCitySearchDialog(
+        onCitySelected = { cityResponse ->
+            onAddCity(cityResponse.name)
         },
-        text = {
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text(
-                    text = "Entrez le nom de la ville que vous souhaitez ajouter",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+        onDismiss = onDismiss
+    )
+}
 
-                OutlinedTextField(
-                    value = cityName,
-                    onValueChange = {
-                        cityName = it
-                        isError = false
-                    },
-                    label = { Text("Nom de la ville") },
-                    placeholder = { Text("ex: Paris, Londres...") },
-                    singleLine = true,
-                    isError = isError,
-                    supportingText = if (isError) {
-                        { Text("Veuillez entrer un nom de ville valide") }
-                    } else null,
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun SmartCitySearchDialog(
+    onCitySelected: (CitySearchResponse) -> Unit,
+    onDismiss: () -> Unit
+) {
+    val context = LocalContext.current
+    val app = context.applicationContext as ClimatScopeApplication
+
+    // Créer le ViewModel avec la factory du DependencyContainer
+    val searchViewModel: CitySearchViewModel = viewModel(
+        factory = app.dependencyContainer.getCitySearchViewModelFactory()
+    )
+
+    Dialog(
+        onDismissRequest = onDismiss,
+        properties = DialogProperties(usePlatformDefaultWidth = false)
+    ) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(0.85f),
+            shape = RoundedCornerShape(24.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surface
+            )
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(24.dp)
+            ) {
+                // En-tête
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column {
+                        Text(
+                            text = "Rechercher une ville",
+                            style = MaterialTheme.typography.headlineSmall,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(
+                            text = "Trouvez n'importe quelle ville dans le monde",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                // Barre de recherche intelligente
+                SmartCitySearchBar(
+                    onCitySelected = onCitySelected,
+                    onDismiss = onDismiss,
+                    searchViewModel = searchViewModel,
                     modifier = Modifier.fillMaxWidth()
                 )
             }
-        },
-        confirmButton = {
-            Button(
-                onClick = {
-                    if (cityName.isBlank()) {
-                        isError = true
-                    } else {
-                        onAddCity(cityName.trim())
-                    }
-                },
-                enabled = cityName.isNotBlank()
-            ) {
-                Text("Ajouter")
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("Annuler")
-            }
         }
-    )
+    }
 }
 
 private fun getWeatherAdvice(weather: Weather): String {

@@ -12,13 +12,9 @@ class WeatherRemoteDataSource(
         return withContext(Dispatchers.IO) {
             try {
                 val response = apiService.getWeather("$cityName,fr")
-                Log.e("TAG", "TEST getWeatherForCity ----- $response", )
-                Log.e("TAG", "TEST getWeatherForCity isSuccessful ****** ${response.isSuccessful}", )
                 if (response.isSuccessful) {
                     response.body()?.let { weatherResponse ->
                         val weather = mapToWeather(weatherResponse)
-                        Log.i("TAG", "TEST weatherResponse ><<<<<<< $weatherResponse")
-                        Log.i("TAG", "TEST ><<<<<<< $weather")
                         Result.success(weather)
                     } ?: Result.failure(Exception("Empty response body"))
                 } else {
