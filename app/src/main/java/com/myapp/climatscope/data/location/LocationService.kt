@@ -16,7 +16,6 @@ interface LocationService {
     suspend fun getCurrentLocation(): Result<Location>
     fun getLocationUpdates(): Flow<Location>
     fun hasLocationPermission(): Boolean
-    suspend fun getCityNameFromCoordinates(latitude: Double, longitude: Double): Result<String>
 }
 
 class DefaultLocationService(
@@ -94,22 +93,5 @@ class DefaultLocationService(
                android.content.pm.PackageManager.PERMISSION_GRANTED ||
                context.checkSelfPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION) ==
                android.content.pm.PackageManager.PERMISSION_GRANTED
-    }
-
-    override suspend fun getCityNameFromCoordinates(latitude: Double, longitude: Double): Result<String> {
-        // Implementation to reverse geocode the coordinates to a city name
-        // This typically involves using a Geocoder or a reverse geocoding API
-        return try {
-            val geocoder = android.location.Geocoder(context)
-            val addresses = geocoder.getFromLocation(latitude, longitude, 1)
-            if (addresses != null && addresses.isNotEmpty()) {
-                val cityName = addresses[0].locality ?: addresses[0].adminArea
-                Result.success(cityName ?: "Unknown city")
-            } else {
-                Result.failure(Exception("City not found"))
-            }
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
     }
 }
